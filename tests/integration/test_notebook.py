@@ -64,7 +64,8 @@ def _assert_cell_no_errors(c):
     """Asserts that the given cell has no error outputs."""
     if c['cell_type'] != 'code':
         return
-    errors = ["Error name: {}, Error Value: {}, trace: {}".format(
+    errors = ["Cell {}, Error name: {}, Error Value: {}, trace: {}".format(
+        c['execution_count'],
         o["ename"], o["evalue"], "\n".join(o.get('traceback')))
         for o in c['outputs']
         if o['output_type'] == 'error']
