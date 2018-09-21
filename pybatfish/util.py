@@ -50,6 +50,8 @@ class BfJsonEncoder(json.JSONEncoder):
             # questions and datamodel elements
             return obj.dict()
         except AttributeError:
+            if (type(obj)) == dict:
+                return obj
             # Fall back to default serialization for all other objects.
             return json.JSONEncoder.default(self, obj)
 
