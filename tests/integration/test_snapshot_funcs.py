@@ -19,6 +19,7 @@ from requests import HTTPError
 
 from pybatfish.client.commands import (bf_delete_network, bf_delete_snapshot,
                                        bf_fork_snapshot, bf_generate_dataplane,
+                                       bf_get_completed_work,
                                        bf_get_snapshot_inferred_node_role_dimension,
                                        bf_get_snapshot_inferred_node_roles,
                                        bf_get_snapshot_node_role_dimension,
@@ -27,7 +28,7 @@ from pybatfish.client.commands import (bf_delete_network, bf_delete_snapshot,
                                        bf_put_node_roles,
                                        bf_session, bf_set_network,
                                        bf_set_snapshot)
-from pybatfish.client.consts import BfConsts
+from pybatfish.client.consts import BfConsts, WorkStatusCode
 from pybatfish.datamodel import Edge, Interface
 from pybatfish.datamodel.referencelibrary import (NodeRoleDimension,
                                                   NodeRolesData)
@@ -42,6 +43,32 @@ def network():
     yield name
     # cleanup
     bf_delete_network(name)
+
+
+def test_get_completed_work(network, example_snapshot):
+    """Get completed work after snapshot init."""
+    completed_work = bf_get_completed_work(example_snapshot)
+    # Should see one completed item from snapshot init
+    assert len(completed_work) == 1
+    key, value = completed_work.popitem()
+    # That item should have terminated normally
+    assert value == WorkStatusCode.TERMINATEDNORMALLY
+
+
+def test_get_completed_work_no_network():
+    """Get completed work with no network specified."""
+    bf_session.network = None
+    # Should fail when network is not set
+    with pytest.raises(ValueError):
+        bf_get_completed_work("snapshot_name")
+
+
+def test_get_completed_work_no_snapshot(network):
+    """Get completed work with no snapshot specified."""
+    bf_set_network(network)
+    # Should fail with non-existent snapshot
+    with pytest.raises(HTTPError):
+        bf_get_completed_work("snapshot_name")
 
 
 def test_init_snapshot_no_crash(network):

@@ -150,6 +150,18 @@ def delete_node_role_dimension(session, dimension):
     return _delete(session, url_tail)
 
 
+def get_completed_work(session, snapshot):
+    # type: (Session, str) -> Dict[str, str]
+    if not session.network:
+        raise ValueError("Network must be set to get completed work")
+    url_tail = "/{}/{}/{}/{}/{}".format(CoordConstsV2.RSC_NETWORKS,
+                                        session.network,
+                                        CoordConstsV2.RSC_SNAPSHOTS,
+                                        snapshot,
+                                        CoordConstsV2.RSC_COMPLETED_WORK)
+    return _get_dict(session, url_tail)
+
+
 def get_issue_config(session, major, minor):
     # type: (Session, str, str) -> Dict
     if not session.network:

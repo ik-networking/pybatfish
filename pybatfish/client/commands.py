@@ -75,6 +75,7 @@ __all__ = ['bf_add_analysis',
            'bf_generate_dataplane',
            'bf_get_analysis_answers',
            'bf_get_answer',
+           'bf_get_completed_work',
            'bf_get_info',
            'bf_get_issue_config',
            'bf_get_node_role_dimension',
@@ -428,6 +429,18 @@ def bf_get_answer(questionName, snapshot, reference_snapshot=None):
                                             jsonData)
     answerJson = json.loads(response["answer"])
     return answerJson
+
+
+def bf_get_completed_work(snapshot):
+    # type: (str) -> Dict[str, str]
+    """
+    Get completed work for the specified snapshot.
+    :param snapshot: the snapshot to retrieve complete work for
+    :type snapshot: str
+    :return: dictionary of completed work and their status
+    :rtype Dict[str, str]:
+    """
+    return restv2helper.get_completed_work(bf_session, snapshot)
 
 
 def bf_get_info():

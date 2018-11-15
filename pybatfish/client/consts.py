@@ -315,6 +315,7 @@ class CoordConstsV2(object):
 
     RSC_CONTAINER = "container"
     RSC_CONTAINERS = "containers"
+    RSC_COMPLETED_WORK = "completed_work"
     RSC_FORK = "fork"
     RSC_INFERRED_NODE_ROLES = "inferred_node_roles"
     RSC_ISSUES = "issues"
